@@ -26,7 +26,7 @@ const getRewardFromMint = async () => {
         const furFiBnbPrice = (await averagePriceOracleContract.methods.getAverageFurFiForOneEth().call()) / Math.pow(10, 18);
 
 
-        rewardPerUSD = EfficientLevel<=furFiBnbPrice ? 0 : (EfficientLevel - furFiBnbPrice) * furFiPrice / bnbPrice;
+        rewardPerUSD = EfficientLevel <= furFiBnbPrice ? 0 : (EfficientLevel - furFiBnbPrice) * furFiPrice / bnbPrice;
                                                                             
         return rewardPerUSD;
 

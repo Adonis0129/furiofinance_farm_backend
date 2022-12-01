@@ -18,11 +18,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.get('/api/computed-apys', apyController.getAPYS);
+app.post('/api/computed-apys', apyController.getAPYS);
   
 setInterval(() => {
   apyController.calculateAndSave();
-}, 30000);
+}, 60000);
 
 
 const server = http.createServer(app);
