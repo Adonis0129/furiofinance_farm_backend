@@ -16,16 +16,13 @@ let rewardPerUSD;
 
 const getRewardFromMint = async () => {
     try {
-        const addresses = getAddresses(ChainIDs.BSCtestnet);
-        const ffStrategyAddress = addresses.USDC_BUSD_FURIOFISTRATEGY_ADDRESS;
-        const averagePriceOracleAddress = addresses.AVERAGEPRICEORACLE_ADDRESS;
-        const ffStrategyContract = new web3.eth.Contract(FFStrategyContract, ffStrategyAddress);
+        const averagePriceOracleAddress = getAddresses(ChainIDs.BSCtestnet, "AVERAGEPRICEORACLE");
         const averagePriceOracleContract = new web3.eth.Contract(AveragePriceOracleContract, averagePriceOracleAddress);
 
-        const bnbPrice = await tokenPrices.fetch_BNB_Price();
+        const bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
         const furFiPrice = await tokenPrices.get_FurFi_Price();
 
-        const EfficientLevel = (await ffStrategyContract.methods.EfficiencyLevel().call()) / Math.pow(10, 18);
+        const EfficientLevel = 500; //from strategy contracts
         const furFiBnbPrice = (await averagePriceOracleContract.methods.getAverageFurFiForOneEth().call()) / Math.pow(10, 18);
 
 

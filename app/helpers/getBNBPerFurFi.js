@@ -15,8 +15,7 @@ let bnbPerFurFi;
 
 const getBNBPerFurFi = async () => {
     try {
-        const addresses = getAddresses(ChainIDs.BSCtestnet);
-        const furFiPairAddress = addresses.BNB_FURFI_PAIR_ADDRESS;
+        const furFiPairAddress = getAddresses(ChainIDs.BSCtestnet, "BNB_FURFI_LP");
         const pair = new web3.eth.Contract( PairContract, furFiPairAddress);
         const reserves = await pair.methods.getReserves().call();
 
@@ -26,7 +25,7 @@ const getBNBPerFurFi = async () => {
         var furFiReserve = reserves[1];
 
         const token0 = await pair.methods.token0().call();
-        if(token0 == addresses.FURFI_ADDRESS){
+        if(token0 == getAddresses(ChainIDs.BSCtestnet, "FURFI")){
             furFiReserve = reserves[0];
             bnbReserve = reserves[1];
         }

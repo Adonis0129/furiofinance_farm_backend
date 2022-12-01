@@ -16,12 +16,10 @@ let stakingPoolApr;
 
 const getStakingPoolApr = async () => {
     try {
-        const addresses = getAddresses(ChainIDs.BSCtestnet);
-        const stakingPoolAddress = addresses.STAKINGPOOL_ADDRESS;
-
+        const stakingPoolAddress = getAddresses(ChainIDs.BSCtestnet, "STAKINGPOOL");
         const stakingPoolContract = new web3.eth.Contract( StakingPoolContract, stakingPoolAddress);
 
-        await tokenPrices.fetch_BNB_Price();
+        await tokenPrices.fetchTokenPrices("BNB");
         const furFiPrice = await tokenPrices.get_FurFi_Price();
         const bnb_furfi_lp_Price = await tokenPrices.get_bnb_furfi_lp_Price();
 
