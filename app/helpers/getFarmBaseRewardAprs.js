@@ -15,19 +15,23 @@ if (typeof web3 !== 'undefined') {
 
 let farmBaseRewardAprs = {};
 
-exports.get_usdc_busd_farmBaseRewardAPR = async () => {
+const getFarmBaseRewardAPR = async (name) => {
     try {
-        const addresses = getAddresses(ChainIDs.BSCtestnet);
-        const ffStrategyAddress = addresses.USDC_BUSD_FURIOFISTRATEGY_ADDRESS;
-        const scStrategyAddress = addresses.USDC_BUSD_STABLECOINSTRATEGY_ADDRESS;
-        const sdStrategyAddress = addresses.USDC_BUSD_STANDARDSTRATEGY_ADDRESS;
+        const ffStrategyName = (name + "_" + "FURIOFISTRATEGY").toString();
+        const scStrategyName = (name + "_" + "STABLECOINSTRATEGY").toString();
+        const sdStrategyName = (name + "_" + "STANDARDSTRATEGY").toString();
+
+        const ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);
+        const scStrategyAddress = getAddresses(ChainIDs.BSCtestnet, scStrategyName);
+        const sdStrategyAddress = getAddresses(ChainIDs.BSCtestnet, sdStrategyName);
 
         const ffStrategyContract = new web3.eth.Contract( FFStrategyContract, ffStrategyAddress);
         const scStrategyContract = new web3.eth.Contract( SCStrategyContract, scStrategyAddress);
         const sdStrategyContract = new web3.eth.Contract( SDStrategyContract, sdStrategyAddress);
 
-        const cakePrice = 0.0004; //await tokenPrices.fetch_CAKE_Price();
-        const usdc_busd_lpPrice = await tokenPrices.get_usdc_busd_lp_Price();
+        const cakePrice = 0.0004; //await tokenPrices.fetchTokenPrices("CAKE");
+        const lpName = (name + "_" + "LP").toString();
+        const lpPrice = await tokenPrices.getLpPrices(lpName);
         const ffStrategyLastStakeRewardsCake = (await ffStrategyContract.methods.lastStakeRewardsCake().call()) / Math.pow(10, 18);
         const ffStrategyDeposits = (await ffStrategyContract.methods.furiofiStrategyDeposits().call()) / Math.pow(10, 18);
         const ffLastStakeRewardsDuration = await ffStrategyContract.methods.lastStakeRewardsDuration().call();
@@ -38,20 +42,21 @@ exports.get_usdc_busd_farmBaseRewardAPR = async () => {
         const sdStrategyDeposits = (await sdStrategyContract.methods.standardStrategyDeposits().call()) / Math.pow(10, 18);
         const sdLastStakeRewardsDuration = await sdStrategyContract.methods.lastStakeRewardsDuration().call();
 
-        const ffStrategyFarmBaseRewardsAPR = (ffStrategyLastStakeRewardsCake * cakePrice) / (ffStrategyDeposits * usdc_busd_lpPrice) * (365 * 24 * 3600) / ffLastStakeRewardsDuration;
-        const scStrategyFarmBaseRewardsAPR = (scStrategyLastStakeRewardsCake * cakePrice) / (scStrategyDeposits * usdc_busd_lpPrice)* (365 * 24 * 3600) / scLastStakeRewardsDuration;
-        const sdStrategyFarmBaseRewardsAPR = (sdStrategyLastStakeRewardsCake * cakePrice) / (sdStrategyDeposits * usdc_busd_lpPrice)* (365 * 24 * 3600) / sdLastStakeRewardsDuration;
+        const ffStrategyFarmBaseRewardsAPR = (ffStrategyLastStakeRewardsCake * cakePrice) / (ffStrategyDeposits * lpPrice) * (365 * 24 * 3600) / ffLastStakeRewardsDuration;
+        const scStrategyFarmBaseRewardsAPR = (scStrategyLastStakeRewardsCake * cakePrice) / (scStrategyDeposits * lpPrice)* (365 * 24 * 3600) / scLastStakeRewardsDuration;
+        const sdStrategyFarmBaseRewardsAPR = (sdStrategyLastStakeRewardsCake * cakePrice) / (sdStrategyDeposits * lpPrice)* (365 * 24 * 3600) / sdLastStakeRewardsDuration;
  
-        farmBaseRewardAprs["USDC-BUSD"] = {
+        farmBaseRewardAprs[name] = {
             ffStrategy: ffStrategyFarmBaseRewardsAPR,
             scStrategy: scStrategyFarmBaseRewardsAPR,
             sdStrategy: sdStrategyFarmBaseRewardsAPR
         }
                                                                             
-        return farmBaseRewardAprs["USDC-BUSD"];
+        return farmBaseRewardAprs[name];
 
     } catch (err) {
         // console.log(err);
-        return farmBaseRewardAprs["USDC-BUSD"];
+        return farmBaseRewardAprs[name];
     }
-}
+};
+module.exports = getFarmBaseRewardAPR;
