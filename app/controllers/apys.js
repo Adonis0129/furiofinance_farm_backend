@@ -44,24 +44,22 @@ exports.calculateAndSave = async () => {
       var sdStrategyAddress = getAddresses(ChainIDs.BSCtestnet, sdStrategyName);
       var sdStrategyFarmBaseAPR = farmBaseRewardsAPR.sdStrategy;
       var sdReinvest = sdStrategyFarmBaseAPR * 0.7;
+      var additionalMintAPR = sdStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint)
       var sdStrategyAPY =
           lpRewardsAPR +
           Math.pow(1 + sdReinvest / 365, 365) - 1 +
           sdStrategyFarmBaseAPR * 0.24 +
-          sdStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint);
+          additionalMintAPR;
 
       //furiofi strategy
       var ffStrategyName = (poolNames[i] + "_" + "FURIOFISTRATEGY").toString();
       var ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);   
       var ffStrategyFarmBaseAPR = farmBaseRewardsAPR.ffStrategy;
-      var ffStrategyAPY =
-          lpRewardsAPR +
-          (
-              ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint)
-          ) * (1 + stakingPoolApr);
+      var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint)) * (1 + stakingPoolApr)
+      var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
 
       var data = {
-          pool: poolNames[i],
+          poolName: poolNames[i],
           lpPrice: lpPrice,
           lpRewardsAPR: lpRewardsAPR * 100,
           stableCoinStrategy: {
@@ -72,11 +70,13 @@ exports.calculateAndSave = async () => {
           standardStrategy: {
             Address: sdStrategyAddress,
             FarmBaseAPR: sdStrategyFarmBaseAPR * 100,
+            additionalMintAPR: additionalMintAPR * 100,
             Apy: sdStrategyAPY * 100,
           },
           furiofiStrategy: {
             Address: ffStrategyAddress,
             FarmBaseAPR: ffStrategyFarmBaseAPR * 100,
+            additionalMintAndStakedAPR: additionalMintAndStakedAPR * 100,
             Apy: ffStrategyAPY * 100,
           },
         };
@@ -86,7 +86,6 @@ exports.calculateAndSave = async () => {
     apys = {
       date: strDate,
       stakingPoolApr: stakingPoolApr,
-      rewardFromAdditionalMint: rewardFromMint,
       instances: instances,
     };
 
