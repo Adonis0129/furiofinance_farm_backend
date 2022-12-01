@@ -12,29 +12,32 @@ if (typeof web3 !== 'undefined') {
     var web3 = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
 }
 
-let stakingPoolApr = 0;
+let stakingPoolApr;
 
-const get_stakingPoolApr = async () => {
+const getStakingPoolApr = async () => {
     try {
         const addresses = getAddresses(ChainIDs.BSCtestnet);
         const stakingPoolAddress = addresses.STAKINGPOOL_ADDRESS;
 
         const stakingPoolContract = new web3.eth.Contract( StakingPoolContract, stakingPoolAddress);
 
+        await tokenPrices.fetch_BNB_Price();
         const furFiPrice = await tokenPrices.get_FurFi_Price();
         const bnb_furfi_lp_Price = await tokenPrices.get_bnb_furfi_lp_Price();
 
         const totalStaked = (await stakingPoolContract.methods.totalStaked().call()) / Math.pow(10, 18);
         const lastStakeRewardsFurFi = (await stakingPoolContract.methods.lastStakeRewardsFurFi().call()) / Math.pow(10, 18);
-        const lastStakeFurFiRewardsDuration = (await stakingPoolContract.methods.lastStakeFurFiRewardsDuration().call()) / Math.pow(10, 18);
+        const lastStakeFurFiRewardsDuration = await stakingPoolContract.methods.lastStakeFurFiRewardsDuration().call();
         const lastStakeRewardsLP = (await stakingPoolContract.methods.lastStakeRewardsLP().call()) / Math.pow(10, 18);
-        const lastStakeLPRewardsDuration = (await stakingPoolContract.methods.lastStakeLPRewardsDuration().call()) / Math.pow(10, 18);
+        const lastStakeLPRewardsDuration = await stakingPoolContract.methods.lastStakeLPRewardsDuration().call();
+        const lastFurFiMintRoundMaskUpdateBlock = await stakingPoolContract.methods.lastFurFiMintRoundMaskUpdateBlock().call();
+        const additionalMintAmountIn365days = (await stakingPoolContract.methods.getFurFiMintRewardsInRange(lastFurFiMintRoundMaskUpdateBlock, lastFurFiMintRoundMaskUpdateBlock + 365 * 3600 / 3).call()) / Math.pow(10, 18);
 
-        const furFiRewardsAPR = lastStakeRewardsFurFi / totalStaked * (365 * 24* 3600) / lastStakeFurFiRewardsDuration * 100;
-        const lpRewardsAPR = (lastStakeRewardsLP * bnb_furfi_lp_Price) / (totalStaked * furFiPrice) * (365 * 24* 3600) / lastStakeLPRewardsDuration * 100;
+        const furFiRewardsAPR = lastStakeRewardsFurFi==0 ? 0 : lastStakeRewardsFurFi / totalStaked * (365 * 24* 3600) / lastStakeFurFiRewardsDuration;
+        const lpRewardsAPR = lastStakeRewardsLP==0 ? 0 : (lastStakeRewardsLP * bnb_furfi_lp_Price) / (totalStaked * furFiPrice) * (365 * 24* 3600) / lastStakeLPRewardsDuration;
+        const additionalMintRewardsAPR = additionalMintAmountIn365days==0 ? 0 : additionalMintAmountIn365days / totalStaked;
 
-
-        stakingPoolApr =  furFiRewardsAPR + lpRewardsAPR;                      
+        stakingPoolApr =  furFiRewardsAPR + lpRewardsAPR + additionalMintRewardsAPR;                   
         return stakingPoolApr;
 
     } catch (err) {
@@ -42,4 +45,4 @@ const get_stakingPoolApr = async () => {
         return stakingPoolApr;
     }
 }
-module.exports = get_stakingPoolApr;
+module.exports = getStakingPoolApr;

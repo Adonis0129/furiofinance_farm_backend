@@ -28,20 +28,6 @@ exports.fetch_CAKE_Price = async () => {
     }
 };
 
-exports.fetch_BNB_Price = async () => {
-    try {
-        const url = "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd";
-        const res = await fetch(url);
-        const data = await res.json();
-        prices["BNB"] = data["binancecoin"].usd;
-        return prices["BNB"];
-
-    } catch (err) {
-        // console.log(err);
-        return prices["BNB"];
-    }
-};
-
 exports.fetch_USDC_Price = async () => {
     try {
         const url = "https://api.coingecko.com/api/v3/simple/price?ids=usd-coin&vs_currencies=usd";
@@ -100,6 +86,19 @@ exports.get_usdc_busd_lp_Price = async () => {
     }
 }
 
+exports.fetch_BNB_Price = async () => {
+    try {
+        const url = "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd";
+        const res = await fetch(url);
+        const data = await res.json();
+        prices["BNB"] = data["binancecoin"].usd;
+        return prices["BNB"];
+
+    } catch (err) {
+        // console.log(err);
+        return prices["BNB"];
+    }
+};
 
 exports.get_FurFi_Price = async () => {
     try {
@@ -115,9 +114,11 @@ exports.get_FurFi_Price = async () => {
 
 exports.get_bnb_furfi_lp_Price = async () => {
     try {
+        var web3ForTest = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
+
         const addresses = getAddresses(ChainIDs.BSCtestnet);
         const bnb_furfiPairAddress = addresses.BNB_FURFI_PAIR_ADDRESS;
-        const pair = new web3.eth.Contract( PairContract, bnb_furfiPairAddress);
+        const pair = new web3ForTest.eth.Contract( PairContract, bnb_furfiPairAddress);
 
         const totalSupply = (await pair.methods.totalSupply().call()) / Math.pow(10, 18);
         const reserves = await pair.methods.getReserves().call();

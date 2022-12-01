@@ -11,7 +11,7 @@ if (typeof web3 !== 'undefined') {
     var web3 = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
 }
 
-let bnbPerFurFi = 0;
+let bnbPerFurFi;
 
 const getBNBPerFurFi = async () => {
     try {

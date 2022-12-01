@@ -38,7 +38,7 @@ exports.get_usdc_busd_lpRewardAPR = async () => {
 
         const usdc_busd_lp_liquidity = usdcReserve * usdcPrice + busdReserve * busdPrice;
 
-        lpRewardAprs["USDC-BUSD"] = (usdc_busd_lp_24h_volume * (0.17 / 100) * 365) / usdc_busd_lp_liquidity * 100;
+        lpRewardAprs["USDC-BUSD"] = (usdc_busd_lp_24h_volume * (0.17 / 100) * 365) / usdc_busd_lp_liquidity;
         return lpRewardAprs["USDC-BUSD"];
 
     } catch (err) {
