@@ -1,12 +1,13 @@
-var getAddresses = require("../constants/addresses");
-var { ChainIDs } = require("../constants/chainId");
-var getLpRewardAPR = require("../helpers/getLPRewardAprs");
-var getFarmBaseRewardAPR = require("../helpers/getFarmBaseRewardAprs");
-var getStakingPoolApr = require("../helpers/getStakingPoolApr");
-var getRewardFromMint = require("../helpers/getRewardFromMint");
+const getAddresses = require("../constants/addresses");
+const { ChainIDs } = require("../constants/chainId");
+const getLpRewardAPR = require("../helpers/getLPRewardAprs");
+const getFarmBaseRewardAPR = require("../helpers/getFarmBaseRewardAprs");
+const getStakingPoolApr = require("../helpers/getStakingPoolApr");
+const getFurFiBNBFarmApr = require("../helpers/getFurFIBNBFarmApr");
+const getRewardFromMint = require("../helpers/getRewardFromMint");
 const tokenPrices = require("../helpers/getTokenPrices");
 
-var poolNames = ["USDC_BUSD", "USDC_USDT", "DAI_BUSD", "BUSD_USDT"];
+const poolNames = ["USDC_BUSD", "USDC_USDT", "DAI_BUSD", "BUSD_USDT"];
 let apys = {};
 
 exports.calculateAndSave = async () => {
@@ -21,6 +22,7 @@ exports.calculateAndSave = async () => {
     var seconds = date_ob.getSeconds();
     var strDate = (year +"-" +month +"-" +date +" " +hours +":" +minutes +":" +seconds).toString();
     var stakingPoolApr = await getStakingPoolApr();
+    var furFiBNBFarmApr = await getFurFiBNBFarmApr();
     var instances = [];
 
     for(var i=0; i<poolNames.length; i++){
@@ -86,6 +88,7 @@ exports.calculateAndSave = async () => {
     apys = {
       date: strDate,
       stakingPoolApr: stakingPoolApr,
+      furFiBNBFarmApr: furFiBNBFarmApr,
       instances: instances,
     };
 
