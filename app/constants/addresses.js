@@ -14,6 +14,7 @@ const BSC_MAINNET = {
     FURFI:                          "",
     BNB_FURFI_LP:                   "",
     STAKINGPOOL:                    "",
+    FURFIBNBFARM:                   "",
     AVERAGEPRICEORACLE:             "",
     USDC_BUSD_FURIOFISTRATEGY:      "",
     USDC_BUSD_STABLECOINSTRATEGY:   "",
@@ -43,6 +44,7 @@ const BSC_TESTNET = {
     FURFI:                          "0xED72AF99857A9b5bE00A8723321FedC03aC1b256",
     BNB_FURFI_LP:                   "0xd734C3D6B79Fc236092Ef87E1ED35786ce2b800C",
     STAKINGPOOL:                    "0xF1be4C5B67d6A04B84564501727E59E32E761A6F",
+    FURFIBNBFARM:                   "0xaB22B365e7E497bcE180efcb31026a7ACc3d7627",
     AVERAGEPRICEORACLE:             "0xd0c8C92EF231B9d7E88a50659080523B7A8547A7",
     USDC_BUSD_FURIOFISTRATEGY:      "0x5c006524222C0f6750aaA17eE7842C19ce5A3846",
     USDC_BUSD_STABLECOINSTRATEGY:   "0x329707d220191D32CDe1b005B46C5c342b9e1D68",
@@ -73,6 +75,7 @@ const getAddresses = (chainID, name) => {
         if(name === "FURFI")                        return BSC_MAINNET.FURFI;
         if(name === "BNB_FURFI_LP")                 return BSC_MAINNET.BNB_FURFI_LP;
         if(name === "STAKINGPOOL")                  return BSC_MAINNET.STAKINGPOOL;
+        if(name === "FURFIBNBFARM")                 return BSC_MAINNET.FURFIBNBFARM;
         if(name === "AVERAGEPRICEORACLE")           return BSC_MAINNET.AVERAGEPRICEORACLE;
         if(name === "USDC_BUSD_FURIOFISTRATEGY")    return BSC_MAINNET.USDC_BUSD_FURIOFISTRATEGY;
         if(name === "USDC_BUSD_STABLECOINSTRATEGY") return BSC_MAINNET.USDC_BUSD_STABLECOINSTRATEGY;
@@ -102,6 +105,7 @@ const getAddresses = (chainID, name) => {
         if(name === "FURFI")                        return BSC_TESTNET.FURFI;
         if(name === "BNB_FURFI_LP")                 return BSC_TESTNET.BNB_FURFI_LP;
         if(name === "STAKINGPOOL")                  return BSC_TESTNET.STAKINGPOOL;
+        if(name === "FURFIBNBFARM")                 return BSC_TESTNET.FURFIBNBFARM;
         if(name === "AVERAGEPRICEORACLE")           return BSC_TESTNET.AVERAGEPRICEORACLE;
         if(name === "USDC_BUSD_FURIOFISTRATEGY")    return BSC_TESTNET.USDC_BUSD_FURIOFISTRATEGY;
         if(name === "USDC_BUSD_STABLECOINSTRATEGY") return BSC_TESTNET.USDC_BUSD_STABLECOINSTRATEGY;
