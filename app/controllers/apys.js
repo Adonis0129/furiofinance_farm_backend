@@ -20,12 +20,17 @@ exports.calculateAndSave = async () => {
     var hours = date_ob.getHours();
     var minutes = date_ob.getMinutes();
     var seconds = date_ob.getSeconds();
+    
     var strDate = (year +"-" +month +"-" +date +" " +hours +":" +minutes +":" +seconds).toString();
+    var bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
+    var furFiPrice = await tokenPrices.get_FurFi_Price();
     var stakingPoolApr = await getStakingPoolApr();
     var furFiBNBFarmApr = await getFurFiBNBFarmApr();
     var instances = [];
+    var tvl = 0;
 
     for(var i=0; i<poolNames.length; i++){
+
       var lpName = (poolNames[i] + "_" + "LP").toString();
       var lpPrice = await tokenPrices.getLpPrices(lpName);
       var lpRewardsAPR = await getLpRewardAPR(lpName);
@@ -63,6 +68,7 @@ exports.calculateAndSave = async () => {
       var data = {
           poolName: poolNames[i],
           lpPrice: lpPrice,
+          tvl: farmBaseRewardsAPR.tvl,
           lpRewardsAPR: lpRewardsAPR * 100,
           stableCoinStrategy: {
             Address: scStrategyAddress,
@@ -82,11 +88,17 @@ exports.calculateAndSave = async () => {
             Apy: ffStrategyAPY * 100,
           },
         };
+
         instances.push(data);
+        tvl += farmBaseRewardsAPR.tvl;
+
     }
 
     apys = {
       date: strDate,
+      bnbPrice: bnbPrice,
+      furFiPrice: furFiPrice,
+      tvl: tvl,
       stakingPoolApr: stakingPoolApr,
       furFiBNBFarmApr: furFiBNBFarmApr,
       instances: instances,

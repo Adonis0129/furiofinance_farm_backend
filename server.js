@@ -18,15 +18,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-app.post('/api/computed-apys', apyController.getAPYS);
+app.get('/api/computed-apys', apyController.getAPYS);
   
 setInterval(() => {
   apyController.calculateAndSave();
-}, 60000);
+}, 30000);
 
 
 const server = http.createServer(app);
 
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => console.log(`listening on port ${PORT}`));
