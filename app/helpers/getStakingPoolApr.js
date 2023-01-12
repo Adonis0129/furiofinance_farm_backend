@@ -31,9 +31,9 @@ const getStakingPoolApr = async () => {
         const lastFurFiMintRoundMaskUpdateBlock = await stakingPoolContract.methods.lastFurFiMintRoundMaskUpdateBlock().call();
         const additionalMintAmountIn365days = (await stakingPoolContract.methods.getFurFiMintRewardsInRange(lastFurFiMintRoundMaskUpdateBlock, lastFurFiMintRoundMaskUpdateBlock + 365 * 3600 / 3).call()) / Math.pow(10, 18);
 
-        const furFiRewardsAPR = lastStakeRewardsFurFi == 0 ? 0 : lastStakeRewardsFurFi / totalStaked * (365 * 24* 3600) / lastStakeFurFiRewardsDuration;
-        const lpRewardsAPR = lastStakeRewardsLP == 0 ? 0 : (lastStakeRewardsLP * bnb_furfi_lp_Price) / (totalStaked * furFiPrice) * (365 * 24* 3600) / lastStakeLPRewardsDuration;
-        const additionalMintRewardsAPR = additionalMintAmountIn365days == 0 ? 0 : additionalMintAmountIn365days / totalStaked;
+        const furFiRewardsAPR = ( lastStakeRewardsFurFi == 0 || lastStakeFurFiRewardsDuration == 0 ) ? 0 : lastStakeRewardsFurFi / totalStaked * (365 * 24* 3600) / lastStakeFurFiRewardsDuration;
+        const lpRewardsAPR = ( lastStakeRewardsLP == 0 || lastStakeLPRewardsDuration == 0 )? 0 : (lastStakeRewardsLP * bnb_furfi_lp_Price) / (totalStaked * furFiPrice) * (365 * 24* 3600) / lastStakeLPRewardsDuration;
+        const additionalMintRewardsAPR = ( additionalMintAmountIn365days == 0 || totalStaked == 0 )? 0 : additionalMintAmountIn365days / totalStaked;
 
         stakingPoolApr =  furFiRewardsAPR + lpRewardsAPR + additionalMintRewardsAPR;                   
         return stakingPoolApr;

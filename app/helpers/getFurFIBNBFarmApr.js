@@ -22,7 +22,7 @@ const getFurFiBNBFarmApr = async () => {
         const lastRoundMaskUpdateBlock = await furFiBNBFarmContract.methods.lastRoundMaskUpdateBlock().call();
         const additionalMintAmountIn365days = (await furFiBNBFarmContract.methods.getFurFiMintRewardsInRange(lastRoundMaskUpdateBlock, lastRoundMaskUpdateBlock + 365 * 3600 / 3).call()) / Math.pow(10, 18);
 
-        const additionalMintRewardsAPR = additionalMintAmountIn365days == 0 ? 0 : additionalMintAmountIn365days / totalDeposits;
+        const additionalMintRewardsAPR = ( additionalMintAmountIn365days == 0 || totalDeposits == 0 ) ? 0 : additionalMintAmountIn365days / totalDeposits;
 
         furFiBNBFarmApr = additionalMintRewardsAPR;                   
         return furFiBNBFarmApr;

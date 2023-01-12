@@ -7,7 +7,9 @@ const getFurFiBNBFarmApr = require("../helpers/getFurFIBNBFarmApr");
 const getRewardFromMint = require("../helpers/getRewardFromMint");
 const tokenPrices = require("../helpers/getTokenPrices");
 
-const poolNames = ["USDC_BUSD", "USDC_USDT", "DAI_BUSD", "BUSD_USDT"];
+const poolNames = ["DAI_BUSD", "USDC_BUSD", "USDC_USDT", "BUSD_USDT"];
+// const poolNames = ["BUSD_USDT"];
+
 let apys = {};
 
 exports.calculateAndSave = async () => {
@@ -29,7 +31,7 @@ exports.calculateAndSave = async () => {
     var instances = [];
     var tvl = 0;
 
-    for(var i=0; i<poolNames.length; i++){
+    for(var i=0; i < poolNames.length; i++){
 
       var lpName = (poolNames[i] + "_" + "LP").toString();
       var lpPrice = await tokenPrices.getLpPrices(lpName);
@@ -58,7 +60,7 @@ exports.calculateAndSave = async () => {
           sdStrategyFarmBaseAPR * 0.24 +
           additionalMintAPR;
 
-      //furiofi strategy
+      //furfi strategy
       var ffStrategyName = (poolNames[i] + "_" + "FURIOFISTRATEGY").toString();
       var ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);   
       var ffStrategyFarmBaseAPR = farmBaseRewardsAPR.ffStrategy;
@@ -70,7 +72,7 @@ exports.calculateAndSave = async () => {
           lpPrice: lpPrice,
           tvl: farmBaseRewardsAPR.tvl,
           lpRewardsAPR: lpRewardsAPR * 100,
-          stableCoinStrategy: {
+          stablecoinStrategy: {
             Address: scStrategyAddress,
             FarmBaseAPR: scStrategyFarmBaseAPR * 100,
             Apy: scStrategyAPY * 100,
@@ -81,7 +83,7 @@ exports.calculateAndSave = async () => {
             additionalMintAPR: additionalMintAPR * 100,
             Apy: sdStrategyAPY * 100,
           },
-          furiofiStrategy: {
+          furfiStrategy: {
             Address: ffStrategyAddress,
             FarmBaseAPR: ffStrategyFarmBaseAPR * 100,
             additionalMintAndStakedAPR: additionalMintAndStakedAPR * 100,
