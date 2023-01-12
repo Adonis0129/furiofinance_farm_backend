@@ -43,9 +43,9 @@ const getFarmBaseRewardAPR = async (name) => {
         const sdLastStakeRewardsDuration = await sdStrategyContract.methods.lastStakeRewardsDuration().call();
 
         const tvl = (ffStrategyDeposits + scStrategyDeposits + sdStrategyDeposits) * lpPrice;
-        const ffStrategyFarmBaseRewardsAPR = ffStrategyDeposits == 0 ? 0 : (ffStrategyLastStakeRewardsCake * cakePrice) / (ffStrategyDeposits * lpPrice) * (365 * 24 * 3600) / ffLastStakeRewardsDuration;
-        const scStrategyFarmBaseRewardsAPR = scStrategyDeposits == 0 ? 0 : (scStrategyLastStakeRewardsCake * cakePrice) / (scStrategyDeposits * lpPrice)* (365 * 24 * 3600) / scLastStakeRewardsDuration;
-        const sdStrategyFarmBaseRewardsAPR = sdStrategyDeposits == 0 ? 0 : (sdStrategyLastStakeRewardsCake * cakePrice) / (sdStrategyDeposits * lpPrice)* (365 * 24 * 3600) / sdLastStakeRewardsDuration;
+        const ffStrategyFarmBaseRewardsAPR = (ffStrategyDeposits == 0 || ffLastStakeRewardsDuration == 0 ) ? 0 : (ffStrategyLastStakeRewardsCake * cakePrice) / (ffStrategyDeposits * lpPrice) * (365 * 24 * 3600) / ffLastStakeRewardsDuration;
+        const scStrategyFarmBaseRewardsAPR = (scStrategyDeposits == 0 || scLastStakeRewardsDuration == 0 ) ? 0 : (scStrategyLastStakeRewardsCake * cakePrice) / (scStrategyDeposits * lpPrice)* (365 * 24 * 3600) / scLastStakeRewardsDuration;
+        const sdStrategyFarmBaseRewardsAPR = (sdStrategyDeposits == 0 || sdLastStakeRewardsDuration == 0 ) ? 0 : (sdStrategyLastStakeRewardsCake * cakePrice) / (sdStrategyDeposits * lpPrice)* (365 * 24 * 3600) / sdLastStakeRewardsDuration;
  
         farmBaseRewardAprs[name] = {
             tvl: tvl,
