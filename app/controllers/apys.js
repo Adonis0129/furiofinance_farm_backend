@@ -7,8 +7,8 @@ const getFurFiBNBFarmApr = require("../helpers/getFurFIBNBFarmApr");
 const getRewardFromMint = require("../helpers/getRewardFromMint");
 const tokenPrices = require("../helpers/getTokenPrices");
 
-// const poolNames = ["DAI_BUSD", "USDC_BUSD", "USDC_USDT", "BUSD_USDT"];
-const poolNames = ["BUSD_USDT"];
+const poolNames = ["DAI_BUSD", "USDC_BUSD", "USDC_USDT", "BUSD_USDT"];
+// const poolNames = ["BUSD_USDT"];
 
 let apys = {};
 
