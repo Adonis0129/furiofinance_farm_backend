@@ -3,7 +3,7 @@ const Web3 = require("web3");
 const getAddresses = require("../constants/addresses");
 const {ChainIDs} = require("../constants/chainId");
 const getURI = require("../constants/uri");
-const StakingPoolContract = require("../abis/contracts/stakingPool.json").abi;
+const StakingPoolABI = require("../abis/contracts/stakingPool.json").abi;
 const tokenPrices = require("./getTokenPrices");
 
 if (typeof web3 !== 'undefined') {
@@ -17,7 +17,7 @@ let stakingPoolApr;
 const getStakingPoolApr = async () => {
     try {
         const stakingPoolAddress = getAddresses(ChainIDs.BSCtestnet, "STAKINGPOOL");
-        const stakingPoolContract = new web3.eth.Contract( StakingPoolContract, stakingPoolAddress);
+        const stakingPoolContract = new web3.eth.Contract( StakingPoolABI, stakingPoolAddress);
 
         await tokenPrices.fetchTokenPrices("BNB");
         const furFiPrice = await tokenPrices.get_FurFi_Price();

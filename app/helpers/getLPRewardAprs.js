@@ -4,7 +4,7 @@ const {ChainIDs} = require("../constants/chainId");
 const getURI = require("../constants/uri");
 const tokenPrices = require("./getTokenPrices");
 const fetchLP24Volume = require("./getLP24Volumes");
-const PairContract = require("../abis/contracts/pair.json").abi;
+const PairABI = require("../abis/contracts/pair.json").abi;
 
 
 if (typeof web3 !== 'undefined') {
@@ -22,7 +22,7 @@ const getLpRewardAPR = async (name) => {
         const tokenName1 = str[1];
 
         const pairAddress = getAddresses(ChainIDs.BSCmainnet, name);
-        const pair = new web3.eth.Contract( PairContract, pairAddress);
+        const pair = new web3.eth.Contract( PairABI, pairAddress);
 
         const token0Price = await tokenPrices.fetchTokenPrices(tokenName0);
         const token1Price = await tokenPrices.fetchTokenPrices(tokenName1);

@@ -2,8 +2,7 @@ const Web3 = require("web3");
 const getAddresses = require("../constants/addresses");
 const {ChainIDs} = require("../constants/chainId");
 const getURI = require("../constants/uri");
-const FFStrategyContract = require("../abis/contracts/furiofiStrategy.json").abi;
-const AveragePriceOracleContract = require("../abis/contracts/averagePriceOracle.json").abi;
+const AveragePriceOracleABI = require("../abis/contracts/averagePriceOracle.json").abi;
 const tokenPrices = require("./getTokenPrices");
 
 if (typeof web3 !== 'undefined') {
@@ -17,7 +16,7 @@ let rewardPerUSD;
 const getRewardFromMint = async () => {
     try {
         const averagePriceOracleAddress = getAddresses(ChainIDs.BSCtestnet, "AVERAGEPRICEORACLE");
-        const averagePriceOracleContract = new web3.eth.Contract(AveragePriceOracleContract, averagePriceOracleAddress);
+        const averagePriceOracleContract = new web3.eth.Contract(AveragePriceOracleABI, averagePriceOracleAddress);
 
         const bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
         const furFiPrice = await tokenPrices.get_FurFi_Price();

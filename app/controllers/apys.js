@@ -33,10 +33,10 @@ exports.calculateAndSave = async () => {
 
     for(var i=0; i < poolNames.length; i++){
 
-      var lpName = (poolNames[i] + "_" + "LP").toString();
+      var lpName = poolNames[i]
       var lpPrice = await tokenPrices.getLpPrices(lpName);
       var lpRewardsAPR = await getLpRewardAPR(lpName);
-      var farmBaseRewardsAPR = await getFarmBaseRewardAPR(poolNames[i]);
+      var farmBaseRewardsAPR = await getFarmBaseRewardAPR(poolNames[i]) ?? {};
       var rewardFromMint = await getRewardFromMint();
 
       // stablecoin strategy
@@ -105,6 +105,7 @@ exports.calculateAndSave = async () => {
       furFiBNBFarmApr: furFiBNBFarmApr,
       instances: instances,
     };
+
 
     console.log(apys);
   } catch (err) {

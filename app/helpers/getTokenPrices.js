@@ -5,13 +5,16 @@ const {ChainIDs} = require("../constants/chainId");
 const getURI = require("../constants/uri");
 const getTokenPriceUrls = require("../constants/tokenPriceUrls");
 const getBNBPerFurFi = require("./getBNBPerFurFi");
-const PairContract = require("../abis/contracts/pair.json").abi;
+const PairABI = require("../abis/contracts/pair.json").abi;
+const StableSwapABI = require("../abis/contracts/stableSwap.json").abi;
+const StableSwapLPABI = require("../abis/tokens/stableSwapLP.json").abi;
 
 if (typeof web3 !== 'undefined') {
     var web3 = new Web3(web3.currentProvider)
 } else {
-    var web3 = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCmainnet)));
+    var web3 = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
 }
+
 let prices = {};
 
 exports.fetchTokenPrices = async (tokenName) => {
@@ -30,29 +33,59 @@ exports.fetchTokenPrices = async (tokenName) => {
 
 
 exports.getLpPrices = async (name) => {
+
     try {
         const str = name.split("_");
         const tokenName0 = str[0];
         const tokenName1 = str[1];
 
-        const pairAddress = getAddresses(ChainIDs.BSCmainnet, name);
-        const pair = new web3.eth.Contract( PairContract, pairAddress);
+        if(name != ("USDC_BUSD"|| "USDC_USDT" || "BUSD_USDT")) {
+           const pairAddress = getAddresses(ChainIDs.BSCtestnet, name);
 
-        const totalSupply = (await pair.methods.totalSupply().call()) / Math.pow(10, 18);
-        const reserves = await pair.methods.getReserves().call();
+            const pair = new web3.eth.Contract( PairABI, pairAddress);
 
-        if(reserves[0] == 0 || reserves[1] == 0) return 0;
+            const totalSupply = (await pair.methods.totalSupply().call()) / Math.pow(10, 18);
+            const reserves = await pair.methods.getReserves().call();
 
-        var token0Reserve = reserves[0] / Math.pow(10, 18);
-        var token1Reserve = reserves[1] / Math.pow(10, 18);
+            if(reserves[0] == 0 || reserves[1] == 0) return 0;
 
-        const token0 = await pair.methods.token0().call();
-        if(token0 == getAddresses(ChainIDs.BSCmainnet, tokenName1)){
-            token1Reserve = reserves[0] / Math.pow(10, 18);
-            token0Reserve = reserves[1] / Math.pow(10, 18);
+            var token0Reserve = reserves[0] / Math.pow(10, 18);
+            var token1Reserve = reserves[1] / Math.pow(10, 18);
+
+            const token0 = await pair.methods.token0().call();
+            if(token0 == getAddresses(ChainIDs.BSCtestnet, tokenName1)){
+                token1Reserve = reserves[0] / Math.pow(10, 18);
+                token0Reserve = reserves[1] / Math.pow(10, 18);
+            }
+
+            prices[name] = (token0Reserve * prices[tokenName0] + token1Reserve * prices[tokenName1]) / totalSupply;
+
+        } 
+        else {
+
+            const stableSwapAddress = getAddresses(ChainIDs.BSCtestnet, name);
+            const stableSwap = new web3.eth.Contract( StableSwapABI, stableSwapAddress);
+            const lpAddress = await stableSwap.methods.token().call();
+            const stableSwapLP = new web3.eth.Contract( StableSwapLPABI, lpAddress);
+
+            const totalSupply = (await stableSwapLP.methods.totalSupply().call()) / Math.pow(10, 18);
+            const reserves0 = await stableSwap.methods.balances(0).call();
+            const reserves1 = await stableSwap.methods.balances(1).call();
+
+            if(reserves0 == 0 || reserves1 == 0) return 0;
+
+            var token0Reserve = reserves0 / Math.pow(10, 18);
+            var token1Reserve = reserves1 / Math.pow(10, 18);
+
+            const token0 = await stableSwap.methods.coins(0).call();
+            if(token0 == getAddresses(ChainIDs.BSCtestnet, tokenName1)){
+                token1Reserve = reserves0 / Math.pow(10, 18);
+                token0Reserve = reserves1 / Math.pow(10, 18);
+            }
+
+            prices[name] = (token0Reserve * prices[tokenName0] + token1Reserve * prices[tokenName1]) / totalSupply;
+
         }
-
-        prices[name] = (token0Reserve * prices[tokenName0] + token1Reserve * prices[tokenName1]) / totalSupply;
         return prices[name];
 
     } catch (err) {
@@ -76,10 +109,11 @@ exports.get_FurFi_Price = async () => {
 
 exports.get_bnb_furfi_lp_Price = async () => {
     try {
-        var web3ForTest = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
 
-        const bnb_furfiPairAddress = getAddresses(ChainIDs.BSCtestnet, "BNB_FURFI_LP");
-        const pair = new web3ForTest.eth.Contract( PairContract, bnb_furfiPairAddress);
+        const bnb_furfiPairAddress = getAddresses(ChainIDs.BSCtestnet, "BNB_FURFI");
+
+        // var web3 = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
+        const pair = new web3.eth.Contract( PairABI, bnb_furfiPairAddress);
 
         const totalSupply = (await pair.methods.totalSupply().call()) / Math.pow(10, 18);
         const reserves = await pair.methods.getReserves().call();
@@ -95,13 +129,17 @@ exports.get_bnb_furfi_lp_Price = async () => {
             bnbReserve = reserves[1] / Math.pow(10, 18);
         }
 
-        prices["BNB_FURFI_LP"] = (bnbReserve * prices["BNB"] + furfiReserve * prices["FURFI"]) / totalSupply;
-        return prices["BNB_FURFI_LP"];
+        prices["BNB_FURFI"] = (bnbReserve * prices["BNB"] + furfiReserve * prices["FURFI"]) / totalSupply;
+        return prices["BNB_FURFI"];
 
     } catch (err) {
         // console.log(err);
-        return prices["BNB_FURFI_LP"];
+        return prices["BNB_FURFI"];
     }
+}
+
+exports.getAllPrices = () => {
+    return prices;
 }
 
 

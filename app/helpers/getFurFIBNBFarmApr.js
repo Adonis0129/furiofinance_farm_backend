@@ -3,7 +3,7 @@ const Web3 = require("web3");
 const getAddresses = require("../constants/addresses");
 const {ChainIDs} = require("../constants/chainId");
 const getURI = require("../constants/uri");
-const FurFiBNBFarmContract = require("../abis/contracts/furFiBNBFarm.json").abi;
+const FurFiBNBFarmABI = require("../abis/contracts/furFiBNBFarm.json").abi;
 
 if (typeof web3 !== 'undefined') {
     var web3 = new Web3(web3.currentProvider)
@@ -16,7 +16,7 @@ let furFiBNBFarmApr;
 const getFurFiBNBFarmApr = async () => {
     try {
         const furFiBNBFarmAddress = getAddresses(ChainIDs.BSCtestnet, "FURFIBNBFARM");
-        const furFiBNBFarmContract = new web3.eth.Contract( FurFiBNBFarmContract, furFiBNBFarmAddress);
+        const furFiBNBFarmContract = new web3.eth.Contract( FurFiBNBFarmABI, furFiBNBFarmAddress);
 
         const totalDeposits = (await furFiBNBFarmContract.methods.totalDeposits().call()) / Math.pow(10, 18);
         const lastRoundMaskUpdateBlock = await furFiBNBFarmContract.methods.lastRoundMaskUpdateBlock().call();

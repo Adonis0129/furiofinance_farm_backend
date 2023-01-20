@@ -2,7 +2,7 @@ const Web3 = require("web3");
 const getAddresses = require("../constants/addresses");
 const {ChainIDs} = require("../constants/chainId");
 const getURI = require("../constants/uri");
-const PairContract = require("../abis/contracts/pair.json").abi;
+const PairABI = require("../abis/contracts/pair.json").abi;
 
 
 if (typeof web3 !== 'undefined') {
@@ -15,8 +15,8 @@ let bnbPerFurFi;
 
 const getBNBPerFurFi = async () => {
     try {
-        const furFiPairAddress = getAddresses(ChainIDs.BSCtestnet, "BNB_FURFI_LP");
-        const pair = new web3.eth.Contract( PairContract, furFiPairAddress);
+        const furFiPairAddress = getAddresses(ChainIDs.BSCtestnet, "BNB_FURFI");
+        const pair = new web3.eth.Contract( PairABI, furFiPairAddress);
         const reserves = await pair.methods.getReserves().call();
 
         if(reserves[0] == 0 || reserves[1] == 0) return 0;
