@@ -11,7 +11,7 @@ if (typeof web3 !== 'undefined') {
     var web3 = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
 }
 
-let rewardPerUSD;
+let rewardFromMint = {};
 
 const getRewardFromMint = async () => {
     try {
@@ -21,17 +21,22 @@ const getRewardFromMint = async () => {
         const bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
         const furFiPrice = await tokenPrices.get_FurFi_Price();
 
-        const EfficientLevel = 500; //from strategy contracts
+        const EfficiencyLevel = 500; //from strategy contracts
         const furFiBnbPrice = (await averagePriceOracleContract.methods.getAverageFurFiForOneEth().call()) / Math.pow(10, 18);
 
-
-        rewardPerUSD = EfficientLevel <= furFiBnbPrice ? 0 : (EfficientLevel - furFiBnbPrice) * furFiPrice / bnbPrice;
+        const rewardPerUSD = EfficiencyLevel <= furFiBnbPrice ? 0 : (EfficiencyLevel - furFiBnbPrice) * furFiPrice / bnbPrice;
                                                                             
-        return rewardPerUSD;
+        rewardFromMint = {
+            efficiencyLevel: EfficiencyLevel,
+            furFiBnbPrice: furFiBnbPrice,
+            rewardPerUSD: rewardPerUSD
+        }
+
+        return rewardFromMint;
 
     } catch (err) {
         // console.log(err);
-        return rewardPerUSD;
+        return rewardFromMint;
     }
 }
 module.exports = getRewardFromMint;

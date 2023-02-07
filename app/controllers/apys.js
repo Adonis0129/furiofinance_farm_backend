@@ -28,6 +28,8 @@ exports.calculateAndSave = async () => {
     var furFiPrice = await tokenPrices.get_FurFi_Price();
     var stakingPoolApr = await getStakingPoolApr();
     var furFiBNBFarmApr = await getFurFiBNBFarmApr();
+    var efficiencyLevel = furFiBNBFarmApr.efficiencyLevel;
+    var furFiBnbPrice = furFiBNBFarmApr.furFiBnbPrice;
     var instances = [];
     var tvl = 0;
 
@@ -44,28 +46,34 @@ exports.calculateAndSave = async () => {
       var scStrategyAddress = getAddresses(ChainIDs.BSCtestnet, scStrategyName);
       var scStrategyFarmBaseAPR = farmBaseRewardsAPR.scStrategy;
       var scReinvest = scStrategyFarmBaseAPR * 0.97;
-      var scStrategyAPY = 
-          lpRewardsAPR + 
-          Math.pow(1 + scReinvest / 365, 365) - 1;
+      var scStrategyAPY = lpRewardsAPR + Math.pow(1 + scReinvest / 365, 365) - 1;
 
       // standard strategy
       var sdStrategyName = (poolNames[i] + "_" + "STANDARDSTRATEGY").toString();
       var sdStrategyAddress = getAddresses(ChainIDs.BSCtestnet, sdStrategyName);
       var sdStrategyFarmBaseAPR = farmBaseRewardsAPR.sdStrategy;
       var sdReinvest = sdStrategyFarmBaseAPR * 0.7;
-      var additionalMintAPR = sdStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint)
-      var sdStrategyAPY =
-          lpRewardsAPR +
-          Math.pow(1 + sdReinvest / 365, 365) - 1 +
-          sdStrategyFarmBaseAPR * 0.24 +
-          additionalMintAPR;
+      if(furFiBnbPrice >= efficiencyLevel){
+        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)
+        var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + sdStrategyFarmBaseAPR * 0.24 + additionalMintAPR;
+      }
+      else{
+        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)
+        var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + additionalMintAPR;
+      }
 
       //furfi strategy
       var ffStrategyName = (poolNames[i] + "_" + "FURIOFISTRATEGY").toString();
       var ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);   
       var ffStrategyFarmBaseAPR = farmBaseRewardsAPR.ffStrategy;
-      var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint)) * (1 + stakingPoolApr)
-      var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
+      if(furFiBnbPrice >= efficiencyLevel){
+        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
+        var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
+      }
+      else{
+        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.70 + ffStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
+        var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
+      }
 
       var data = {
           poolName: poolNames[i],
@@ -100,6 +108,8 @@ exports.calculateAndSave = async () => {
       date: strDate,
       bnbPrice: bnbPrice,
       furFiPrice: furFiPrice,
+      efficiencyLevel: efficiencyLevel,
+      furFiBnbPrice: furFiBnbPrice,
       tvl: tvl,
       stakingPoolApr: stakingPoolApr,
       furFiBNBFarmApr: furFiBNBFarmApr,
