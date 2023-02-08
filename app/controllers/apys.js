@@ -10,7 +10,7 @@ const tokenPrices = require("../helpers/getTokenPrices");
 const poolNames = ["DAI_BUSD", "USDC_BUSD", "USDC_USDT", "BUSD_USDT"];
 // const poolNames = ["BUSD_USDT"];
 
-let apys = {};
+let apys = { bnbPrice: 350};
 
 exports.calculateAndSave = async () => {
   try {
