@@ -34,7 +34,7 @@ setInterval(() => {
 }, 30000);
 
 
-// const server = http.createServer(app);
+const server = http.createServer(app);
 
 const PORT = process.env.PORT || 4000;
 
