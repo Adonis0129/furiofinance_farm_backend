@@ -25,13 +25,13 @@ exports.calculateAndSave = async () => {
     
     var strDate = (year +"-" +month +"-" +date +" " +hours +":" +minutes +":" +seconds).toString();
     var bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
-    var furFiPrice = await tokenPrices.get_FurFi_Price();
-    var stakingPoolApr = await getStakingPoolApr();
-    var furFiBNBFarmApr = await getFurFiBNBFarmApr();
-    var efficiencyLevel = furFiBNBFarmApr.efficiencyLevel;
-    var furFiBnbPrice = furFiBNBFarmApr.furFiBnbPrice;
-    var instances = [];
-    var tvl = 0;
+    // var furFiPrice = await tokenPrices.get_FurFi_Price();
+    // var stakingPoolApr = await getStakingPoolApr();
+    // var furFiBNBFarmApr = await getFurFiBNBFarmApr();
+    // var efficiencyLevel = furFiBNBFarmApr.efficiencyLevel;
+    // var furFiBnbPrice = furFiBNBFarmApr.furFiBnbPrice;
+    // var instances = [];
+    // var tvl = 0;
 
     // for(var i=0; i < poolNames.length; i++){
 
@@ -107,12 +107,12 @@ exports.calculateAndSave = async () => {
     apys = {
       date: strDate,
       bnbPrice: bnbPrice,
-      furFiPrice: furFiPrice,
-      efficiencyLevel: efficiencyLevel,
-      furFiBnbPrice: furFiBnbPrice,
-      tvl: tvl,
-      stakingPoolApr: stakingPoolApr,
-      furFiBNBFarmApr: furFiBNBFarmApr,
+      // furFiPrice: furFiPrice,
+      // efficiencyLevel: efficiencyLevel,
+      // furFiBnbPrice: furFiBnbPrice,
+      // tvl: tvl,
+      // stakingPoolApr: stakingPoolApr,
+      // furFiBNBFarmApr: furFiBNBFarmApr,
       // instances: instances,
     };
 
