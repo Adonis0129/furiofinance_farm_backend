@@ -11,7 +11,7 @@ var corsOptions = {
 const app = express();
 
 //for vercel deployment
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 app.use(cors(corsOptions));
 
@@ -31,15 +31,15 @@ app.get('/api/computed-apys', apyController.getAPYS);
   
 setInterval(() => {
   apyController.calculateAndSave();
-}, 5400000);
+}, 30000);
 
 
 // const server = http.createServer(app);
 
 const PORT = process.env.PORT || 4000;
 
-// server.listen(PORT, () => console.log(`listening on port ${PORT}`));
+server.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
 //for vercel deplyment
-app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+// app.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
