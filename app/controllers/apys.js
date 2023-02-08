@@ -25,95 +25,95 @@ exports.calculateAndSave = async () => {
     
     var strDate = (year +"-" +month +"-" +date +" " +hours +":" +minutes +":" +seconds).toString();
     var bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
-    // var furFiPrice = await tokenPrices.get_FurFi_Price();
-    // var stakingPoolApr = await getStakingPoolApr();
-    // var furFiBNBFarmApr = await getFurFiBNBFarmApr();
-    // var efficiencyLevel = furFiBNBFarmApr.efficiencyLevel;
-    // var furFiBnbPrice = furFiBNBFarmApr.furFiBnbPrice;
-    // var instances = [];
-    // var tvl = 0;
+    var furFiPrice = await tokenPrices.get_FurFi_Price();
+    var stakingPoolApr = await getStakingPoolApr();
+    var furFiBNBFarmApr = await getFurFiBNBFarmApr();
+    var efficiencyLevel = furFiBNBFarmApr.efficiencyLevel;
+    var furFiBnbPrice = furFiBNBFarmApr.furFiBnbPrice;
+    var instances = [];
+    var tvl = 0;
 
-    // for(var i=0; i < poolNames.length; i++){
+    for(var i=0; i < poolNames.length; i++){
 
-    //   var lpName = poolNames[i]
-    //   var lpPrice = await tokenPrices.getLpPrices(lpName);
-    //   var lpRewardsAPR = await getLpRewardAPR(lpName);
-    //   var farmBaseRewardsAPR = await getFarmBaseRewardAPR(poolNames[i]) ?? {};
-    //   var rewardFromMint = await getRewardFromMint();
+      var lpName = poolNames[i]
+      var lpPrice = await tokenPrices.getLpPrices(lpName);
+      var lpRewardsAPR = await getLpRewardAPR(lpName);
+      var farmBaseRewardsAPR = await getFarmBaseRewardAPR(poolNames[i]) ?? {};
+      var rewardFromMint = await getRewardFromMint();
 
-    //   // stablecoin strategy
-    //   var scStrategyName = (poolNames[i] + "_" + "STABLECOINSTRATEGY").toString();
-    //   var scStrategyAddress = getAddresses(ChainIDs.BSCtestnet, scStrategyName);
-    //   var scStrategyFarmBaseAPR = farmBaseRewardsAPR.scStrategy;
-    //   var scReinvest = scStrategyFarmBaseAPR * 0.97;
-    //   var scStrategyAPY = lpRewardsAPR + Math.pow(1 + scReinvest / 365, 365) - 1;
+      // stablecoin strategy
+      var scStrategyName = (poolNames[i] + "_" + "STABLECOINSTRATEGY").toString();
+      var scStrategyAddress = getAddresses(ChainIDs.BSCtestnet, scStrategyName);
+      var scStrategyFarmBaseAPR = farmBaseRewardsAPR.scStrategy;
+      var scReinvest = scStrategyFarmBaseAPR * 0.97;
+      var scStrategyAPY = lpRewardsAPR + Math.pow(1 + scReinvest / 365, 365) - 1;
 
-    //   // standard strategy
-    //   var sdStrategyName = (poolNames[i] + "_" + "STANDARDSTRATEGY").toString();
-    //   var sdStrategyAddress = getAddresses(ChainIDs.BSCtestnet, sdStrategyName);
-    //   var sdStrategyFarmBaseAPR = farmBaseRewardsAPR.sdStrategy;
-    //   var sdReinvest = sdStrategyFarmBaseAPR * 0.7;
-    //   if(furFiBnbPrice >= efficiencyLevel){
-    //     var additionalMintAPR = sdStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)
-    //     var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + sdStrategyFarmBaseAPR * 0.24 + additionalMintAPR;
-    //   }
-    //   else{
-    //     var additionalMintAPR = sdStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)
-    //     var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + additionalMintAPR;
-    //   }
+      // standard strategy
+      var sdStrategyName = (poolNames[i] + "_" + "STANDARDSTRATEGY").toString();
+      var sdStrategyAddress = getAddresses(ChainIDs.BSCtestnet, sdStrategyName);
+      var sdStrategyFarmBaseAPR = farmBaseRewardsAPR.sdStrategy;
+      var sdReinvest = sdStrategyFarmBaseAPR * 0.7;
+      if(furFiBnbPrice >= efficiencyLevel){
+        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)
+        var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + sdStrategyFarmBaseAPR * 0.24 + additionalMintAPR;
+      }
+      else{
+        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)
+        var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + additionalMintAPR;
+      }
 
-    //   //furfi strategy
-    //   var ffStrategyName = (poolNames[i] + "_" + "FURIOFISTRATEGY").toString();
-    //   var ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);   
-    //   var ffStrategyFarmBaseAPR = farmBaseRewardsAPR.ffStrategy;
-    //   if(furFiBnbPrice >= efficiencyLevel){
-    //     var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
-    //     var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
-    //   }
-    //   else{
-    //     var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.70 + ffStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
-    //     var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
-    //   }
+      //furfi strategy
+      var ffStrategyName = (poolNames[i] + "_" + "FURIOFISTRATEGY").toString();
+      var ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);   
+      var ffStrategyFarmBaseAPR = farmBaseRewardsAPR.ffStrategy;
+      if(furFiBnbPrice >= efficiencyLevel){
+        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
+        var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
+      }
+      else{
+        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.70 + ffStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
+        var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
+      }
 
-    //   var data = {
-    //       poolName: poolNames[i],
-    //       lpPrice: lpPrice,
-    //       tvl: farmBaseRewardsAPR.tvl,
-    //       lpRewardsAPR: lpRewardsAPR * 100,
-    //       stablecoinStrategy: {
-    //         Address: scStrategyAddress,
-    //         FarmBaseAPR: scStrategyFarmBaseAPR * 100,
-    //         Apy: scStrategyAPY * 100,
-    //       },
-    //       standardStrategy: {
-    //         Address: sdStrategyAddress,
-    //         FarmBaseAPR: sdStrategyFarmBaseAPR * 100,
-    //         additionalMintAPR: additionalMintAPR * 100,
-    //         Apy: sdStrategyAPY * 100,
-    //       },
-    //       furfiStrategy: {
-    //         Address: ffStrategyAddress,
-    //         FarmBaseAPR: ffStrategyFarmBaseAPR * 100,
-    //         additionalMintAndStakedAPR: additionalMintAndStakedAPR * 100,
-    //         Apy: ffStrategyAPY * 100,
-    //       },
-    //     };
+      var data = {
+          poolName: poolNames[i],
+          lpPrice: lpPrice,
+          tvl: farmBaseRewardsAPR.tvl,
+          lpRewardsAPR: lpRewardsAPR * 100,
+          stablecoinStrategy: {
+            Address: scStrategyAddress,
+            FarmBaseAPR: scStrategyFarmBaseAPR * 100,
+            Apy: scStrategyAPY * 100,
+          },
+          standardStrategy: {
+            Address: sdStrategyAddress,
+            FarmBaseAPR: sdStrategyFarmBaseAPR * 100,
+            additionalMintAPR: additionalMintAPR * 100,
+            Apy: sdStrategyAPY * 100,
+          },
+          furfiStrategy: {
+            Address: ffStrategyAddress,
+            FarmBaseAPR: ffStrategyFarmBaseAPR * 100,
+            additionalMintAndStakedAPR: additionalMintAndStakedAPR * 100,
+            Apy: ffStrategyAPY * 100,
+          },
+        };
 
-    //     instances.push(data);
-    //     tvl += farmBaseRewardsAPR.tvl;
+        instances.push(data);
+        tvl += farmBaseRewardsAPR.tvl;
 
-    // }
+    }
 
     apys = {
       date: strDate,
       bnbPrice: bnbPrice,
-      // furFiPrice: furFiPrice,
-      // efficiencyLevel: efficiencyLevel,
-      // furFiBnbPrice: furFiBnbPrice,
-      // tvl: tvl,
-      // stakingPoolApr: stakingPoolApr,
-      // furFiBNBFarmApr: furFiBNBFarmApr,
-      // instances: instances,
+      furFiPrice: furFiPrice,
+      efficiencyLevel: efficiencyLevel,
+      furFiBnbPrice: furFiBnbPrice,
+      tvl: tvl,
+      stakingPoolApr: stakingPoolApr,
+      furFiBNBFarmApr: furFiBNBFarmApr,
+      instances: instances,
     };
 
 
