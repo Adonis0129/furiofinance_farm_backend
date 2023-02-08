@@ -31,7 +31,7 @@ app.get('/api/computed-apys', apyController.getAPYS);
   
 setInterval(() => {
   apyController.calculateAndSave();
-}, 1800000);
+}, 3600000);
 
 
 // const server = http.createServer(app);
