@@ -28,8 +28,10 @@ exports.calculateAndSave = async () => {
     var furFiPrice = await tokenPrices.get_FurFi_Price();
     var stakingPoolApr = await getStakingPoolApr();
     var furFiBNBFarmApr = await getFurFiBNBFarmApr();
-    var efficiencyLevel = furFiBNBFarmApr.efficiencyLevel;
-    var furFiBnbPrice = furFiBNBFarmApr.furFiBnbPrice;
+    var rewardFromMint = await getRewardFromMint();
+    var rewardPerUSD = rewardFromMint.rewardPerUSD;
+    var efficiencyLevel = rewardFromMint.efficiencyLevel;
+    var furFiBnbPrice = rewardFromMint.furFiBnbPrice;
     var instances = [];
     var tvl = 0;
 
@@ -39,7 +41,6 @@ exports.calculateAndSave = async () => {
       var lpPrice = await tokenPrices.getLpPrices(lpName);
       var lpRewardsAPR = await getLpRewardAPR(lpName);
       var farmBaseRewardsAPR = await getFarmBaseRewardAPR(poolNames[i]) ?? {};
-      var rewardFromMint = await getRewardFromMint();
 
       // stablecoin strategy
       var scStrategyName = (poolNames[i] + "_" + "STABLECOINSTRATEGY").toString();
@@ -54,11 +55,11 @@ exports.calculateAndSave = async () => {
       var sdStrategyFarmBaseAPR = farmBaseRewardsAPR.sdStrategy;
       var sdReinvest = sdStrategyFarmBaseAPR * 0.7;
       if(furFiBnbPrice >= efficiencyLevel){
-        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)
+        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.06 * (1 + rewardPerUSD)
         var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + sdStrategyFarmBaseAPR * 0.24 + additionalMintAPR;
       }
       else{
-        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)
+        var additionalMintAPR = sdStrategyFarmBaseAPR * 0.30 * (1 + rewardPerUSD)
         var sdStrategyAPY = lpRewardsAPR + Math.pow(1 + sdReinvest / 365, 365) - 1 + additionalMintAPR;
       }
 
@@ -67,11 +68,11 @@ exports.calculateAndSave = async () => {
       var ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);   
       var ffStrategyFarmBaseAPR = farmBaseRewardsAPR.ffStrategy;
       if(furFiBnbPrice >= efficiencyLevel){
-        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
+        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardPerUSD)) * (1 + stakingPoolApr)
         var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
       }
       else{
-        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.70 + ffStrategyFarmBaseAPR * 0.30 * (1 + rewardFromMint.rewardPerUSD)) * (1 + stakingPoolApr)
+        var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.70 + ffStrategyFarmBaseAPR * 0.30 * (1 + rewardPerUSD)) * (1 + stakingPoolApr)
         var ffStrategyAPY = lpRewardsAPR + additionalMintAndStakedAPR;
       }
 
