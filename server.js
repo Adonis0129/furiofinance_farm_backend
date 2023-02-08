@@ -17,6 +17,9 @@ app.use(bodyParser.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res.send('Hey this is my API running 🥳')
+})
 
 app.get('/api/computed-apys', apyController.getAPYS);
   
