@@ -9,13 +9,17 @@ var corsOptions = {
 };
 
 const app = express();
-app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
-app.use(bodyParser.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(cors(corsOptions));
+
+// // parse requests of content-type - application/json
+// app.use(bodyParser.json());
+
+// // parse requests of content-type - application/x-www-form-urlencoded
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+
 
 app.get('/', (req, res) => {
   res.send('Hey this is my API running 🥳')
@@ -33,6 +37,9 @@ setInterval(() => {
 const PORT = process.env.PORT || 5000;
 
 // server.listen(PORT, () => console.log(`listening on port ${PORT}`));
+
+//for vercel deplyment
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
+//for vercel deployment
 module.exports = app
