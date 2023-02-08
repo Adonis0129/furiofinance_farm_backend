@@ -10,14 +10,16 @@ var corsOptions = {
 
 const app = express();
 
+//for vercel deployment
+app.use(express.static('public'));
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
-// // parse requests of content-type - application/json
-// app.use(bodyParser.json());
+// parse requests of content-type - application/json
+app.use(bodyParser.json());
 
-// // parse requests of content-type - application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: true }));
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
@@ -34,12 +36,10 @@ setInterval(() => {
 
 // const server = http.createServer(app);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 // server.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
 //for vercel deplyment
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
 
-//for vercel deployment
-module.exports = app
