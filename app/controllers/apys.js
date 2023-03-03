@@ -3,7 +3,7 @@ const { ChainIDs } = require("../constants/chainId");
 const getLpRewardAPR = require("../helpers/getLPRewardAprs");
 const getFarmBaseRewardAPR = require("../helpers/getFarmBaseRewardAprs");
 const getStakingPoolApr = require("../helpers/getStakingPoolApr");
-const getFurFiBNBFarmApr = require("../helpers/getFurFIBNBFarmApr");
+// const getFurFiBNBFarmApr = require("../helpers/getFurFIBNBFarmApr");
 const getRewardFromMint = require("../helpers/getRewardFromMint");
 const tokenPrices = require("../helpers/getTokenPrices");
 
@@ -26,8 +26,9 @@ exports.calculateAndSave = async () => {
     var strDate = (year +"-" +month +"-" +date +" " +hours +":" +minutes +":" +seconds).toString();
     var bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
     var furFiPrice = await tokenPrices.get_FurFi_Price();
+    var bnb_furfi_lp_Price = await tokenPrices.get_bnb_furfi_lp_Price();
     var stakingPoolApr = await getStakingPoolApr();
-    var furFiBNBFarmApr = await getFurFiBNBFarmApr();
+    // var furFiBNBFarmApr = await getFurFiBNBFarmApr();
     var rewardFromMint = await getRewardFromMint();
     var rewardPerUSD = rewardFromMint.rewardPerUSD;
     var efficiencyLevel = rewardFromMint.efficiencyLevel;
@@ -109,11 +110,11 @@ exports.calculateAndSave = async () => {
       date: strDate,
       bnbPrice: bnbPrice,
       furFiPrice: furFiPrice,
+      bnb_furfi_lp_Price: bnb_furfi_lp_Price,
       efficiencyLevel: efficiencyLevel,
       furFiBnbPrice: furFiBnbPrice,
       tvl: tvl,
       stakingPoolApr: stakingPoolApr,
-      furFiBNBFarmApr: furFiBNBFarmApr,
       instances: instances,
     };
 
