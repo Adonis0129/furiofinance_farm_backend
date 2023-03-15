@@ -1,7 +1,7 @@
 {
-  "name": "node.js-furfifarm-backend",
+  "name": "node.js-furfi-backend",
   "version": "1.0.0",
-  "description": "FURFI Farm",
+  "description": "furiofinance",
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
