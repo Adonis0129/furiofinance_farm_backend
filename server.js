@@ -4,6 +4,7 @@ const http = require("http");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const apyController = require("./app/controllers/apys");
+
 var corsOptions = {
   origin: "*"
 };
@@ -29,9 +30,10 @@ app.get('/', (req, res) => {
 
 app.get('/api/computed-apys', apyController.getAPYS);
   
+
 setInterval(() => {
   apyController.calculateAndSave();
-}, 60000);
+}, 120000);
 
 
 const server = http.createServer(app);

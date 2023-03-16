@@ -1,27 +1,26 @@
 const { model } = require("mongoose");
 const Web3 = require("web3");
-const getAddresses = require("../constants/addresses");
-const {ChainIDs} = require("../constants/chainId");
-const getURI = require("../constants/uri");
+const addresses = require("../constants/addresses");
+const DEFAULT_CHAINID = require("../constants/chainId");
+const uri = require("../constants/uri");
 const StakingPoolABI = require("../abis/contracts/stakingPool.json").abi;
 const tokenPrices = require("./getTokenPrices");
 
 if (typeof web3 !== 'undefined') {
     var web3 = new Web3(web3.currentProvider)
 } else {
-    var web3 = new Web3(new Web3.providers.HttpProvider(getURI(ChainIDs.BSCtestnet)));
+    var web3 = new Web3(new Web3.providers.HttpProvider(uri[DEFAULT_CHAINID]));
 }
 
 let stakingPoolApr;
 
 const getStakingPoolApr = async () => {
     try {
-        const stakingPoolAddress = getAddresses(ChainIDs.BSCtestnet, "STAKINGPOOL");
+        const stakingPoolAddress = addresses['stakingPool'][DEFAULT_CHAINID];
         const stakingPoolContract = new web3.eth.Contract( StakingPoolABI, stakingPoolAddress);
 
-        await tokenPrices.fetchTokenPrices("BNB");
-        const furFiPrice = await tokenPrices.get_FurFi_Price();
-        const bnb_furfi_lp_Price = await tokenPrices.get_bnb_furfi_lp_Price();
+        const furFiPrice = tokenPrices.getPrices('furfi');
+        const bnb_furfi_lp_Price = tokenPrices.getPrices('bnb_furfi_lp');
 
         const totalStaked = (await stakingPoolContract.methods.totalStaked().call()) / Math.pow(10, 18);
         const lastStakeRewardsFurFi = (await stakingPoolContract.methods.lastStakeRewardsFurFi().call()) / Math.pow(10, 18);
