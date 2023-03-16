@@ -1,14 +1,12 @@
-const getAddresses = require("../constants/addresses");
-const { ChainIDs } = require("../constants/chainId");
+const addresses = require("../constants/addresses");
+const DEFAULT_CHAINID = require("../constants/chainId");
 const getLpRewardAPR = require("../helpers/getLPRewardAprs");
 const getFarmBaseRewardAPR = require("../helpers/getFarmBaseRewardAprs");
 const getStakingPoolApr = require("../helpers/getStakingPoolApr");
-// const getFurFiBNBFarmApr = require("../helpers/getFurFIBNBFarmApr");
 const getRewardFromMint = require("../helpers/getRewardFromMint");
 const tokenPrices = require("../helpers/getTokenPrices");
 
-const poolNames = ["DAI_BUSD", "USDC_BUSD", "USDC_USDT", "BUSD_USDT"];
-// const poolNames = ["BUSD_USDT"];
+const poolNames = ["dai_busd", "usdc_busd", "usdc_usdt", "busd_usdt"];
 
 let apys = {};
 
@@ -24,11 +22,19 @@ exports.calculateAndSave = async () => {
     var seconds = date_ob.getSeconds();
     
     var strDate = (year +"-" +month +"-" +date +" " +hours +":" +minutes +":" +seconds).toString();
-    var bnbPrice = await tokenPrices.fetchTokenPrices("BNB");
-    var furFiPrice = await tokenPrices.get_FurFi_Price();
-    var bnb_furfi_lp_Price = await tokenPrices.get_bnb_furfi_lp_Price();
+
+    // fetch all token prices - use to lpPrices
+    var bnbPrice = await tokenPrices.fetchTokenPrices("bnb");
+    var usdcPrice = await tokenPrices.fetchTokenPrices('usdc');
+    var busdPrice = await tokenPrices.fetchTokenPrices('busd');
+    var usdtPrice = await tokenPrices.fetchTokenPrices('usdt');
+    var daiPrice = await tokenPrices.fetchTokenPrices('dai');
+    var cakePrice =await tokenPrices.fetchTokenPrices('cake');
+    var furFiPrice = await tokenPrices.fetchFurfiPrice();
+    var bnb_furfi_lp_Price = await tokenPrices.fetch_bnb_furfi_lp_Price();
+
+ 
     var stakingPoolApr = await getStakingPoolApr();
-    // var furFiBNBFarmApr = await getFurFiBNBFarmApr();
     var rewardFromMint = await getRewardFromMint();
     var rewardPerUSD = rewardFromMint.rewardPerUSD;
     var efficiencyLevel = rewardFromMint.efficiencyLevel;
@@ -36,23 +42,22 @@ exports.calculateAndSave = async () => {
     var instances = [];
     var tvl = 0;
 
+
     for(var i=0; i < poolNames.length; i++){
 
-      var lpName = poolNames[i]
-      var lpPrice = await tokenPrices.getLpPrices(lpName);
-      var lpRewardsAPR = await getLpRewardAPR(lpName);
+      var lpName = (poolNames[i] + '_lp').toString();
+      var lpPrice = await tokenPrices.fetchLpPrices(lpName);
+      var lpRewardsAPR = 0.3 // await getLpRewardAPR(lpName);
       var farmBaseRewardsAPR = await getFarmBaseRewardAPR(poolNames[i]) ?? {};
 
       // stablecoin strategy
-      var scStrategyName = (poolNames[i] + "_" + "STABLECOINSTRATEGY").toString();
-      var scStrategyAddress = getAddresses(ChainIDs.BSCtestnet, scStrategyName);
+      var scStrategyAddress = addresses[poolNames[i]]['stablecoinStrategy'][DEFAULT_CHAINID];
       var scStrategyFarmBaseAPR = farmBaseRewardsAPR.scStrategy;
       var scReinvest = scStrategyFarmBaseAPR * 0.97;
       var scStrategyAPY = lpRewardsAPR + Math.pow(1 + scReinvest / 365, 365) - 1;
 
       // standard strategy
-      var sdStrategyName = (poolNames[i] + "_" + "STANDARDSTRATEGY").toString();
-      var sdStrategyAddress = getAddresses(ChainIDs.BSCtestnet, sdStrategyName);
+      var sdStrategyAddress = addresses[poolNames[i]]['standardStrategy'][DEFAULT_CHAINID];
       var sdStrategyFarmBaseAPR = farmBaseRewardsAPR.sdStrategy;
       var sdReinvest = sdStrategyFarmBaseAPR * 0.7;
       if(furFiBnbPrice >= efficiencyLevel){
@@ -65,8 +70,7 @@ exports.calculateAndSave = async () => {
       }
 
       //furfi strategy
-      var ffStrategyName = (poolNames[i] + "_" + "FURIOFISTRATEGY").toString();
-      var ffStrategyAddress = getAddresses(ChainIDs.BSCtestnet, ffStrategyName);   
+      var ffStrategyAddress = addresses[poolNames[i]]['furfiStrategy'][DEFAULT_CHAINID];   
       var ffStrategyFarmBaseAPR = farmBaseRewardsAPR.ffStrategy;
       if(furFiBnbPrice >= efficiencyLevel){
         var additionalMintAndStakedAPR = ( ffStrategyFarmBaseAPR * 0.94 + ffStrategyFarmBaseAPR * 0.06 * (1 + rewardPerUSD)) * (1 + stakingPoolApr)
@@ -114,12 +118,12 @@ exports.calculateAndSave = async () => {
       efficiencyLevel: efficiencyLevel,
       furFiBnbPrice: furFiBnbPrice,
       tvl: tvl,
-      stakingPoolApr: stakingPoolApr,
+      stakingPoolApr: stakingPoolApr * 100,
       instances: instances,
     };
 
+    // console.log(apys);
 
-    console.log(apys);
   } catch (err) {
     // console.log(err);
     console.log("return previous data");

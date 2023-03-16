@@ -3,6 +3,6 @@ const ChainIDs =  {
     BSCtestnet : 97,
 }
 
-module.exports =  {
-    ChainIDs
-};
+const DEFAULT_CHAINID = ChainIDs.BSCtestnet;
+
+module.exports = DEFAULT_CHAINID;

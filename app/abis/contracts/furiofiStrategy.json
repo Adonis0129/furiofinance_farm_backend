@@ -693,6 +693,25 @@
                     "type": "address"
                 }
             ],
+            "name": "getFuriofiStrategyAdditionalFurFiRewards",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "staker",
+                    "type": "address"
+                }
+            ],
             "name": "getFuriofiStrategyBalance",
             "outputs": [
                 {
@@ -801,61 +820,6 @@
         {
             "inputs": [
                 {
-                    "internalType": "address",
-                    "name": "participant",
-                    "type": "address"
-                }
-            ],
-            "name": "getLoanParticipantData",
-            "outputs": [
-                {
-                    "components": [
-                        {
-                            "internalType": "uint256",
-                            "name": "loanableAmount",
-                            "type": "uint256"
-                        },
-                        {
-                            "internalType": "uint256",
-                            "name": "loanedAmount",
-                            "type": "uint256"
-                        }
-                    ],
-                    "internalType": "struct FFStrategyFurioFinance.LoanParticipant",
-                    "name": "",
-                    "type": "tuple"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "address",
-                    "name": "staker",
-                    "type": "address"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "withdrawalAmount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getRepayalAmount",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "repayalAmount",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
                     "internalType": "bytes32",
                     "name": "role",
                     "type": "bytes32"
@@ -873,8 +837,14 @@
             "type": "function"
         },
         {
-            "inputs": [],
-            "name": "getUpdatedState",
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "participant",
+                    "type": "address"
+                }
+            ],
+            "name": "getUpdatedStateData",
             "outputs": [
                 {
                     "internalType": "uint256",
@@ -898,7 +868,7 @@
                 },
                 {
                     "internalType": "uint256",
-                    "name": "earnedBnb",
+                    "name": "earnedLp",
                     "type": "uint256"
                 },
                 {
@@ -907,7 +877,7 @@
                     "type": "uint256"
                 }
             ],
-            "stateMutability": "nonpayable",
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -1060,13 +1030,6 @@
                 }
             ],
             "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "loan",
-            "outputs": [],
-            "stateMutability": "nonpayable",
             "type": "function"
         },
         {

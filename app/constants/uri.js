@@ -1,7 +1,6 @@
-const {ChainIDs} = require("./chainId");
 
-const getURI = (chainID) => {
-    if(chainID === ChainIDs.BSCmainnet) return "https://bsc-dataseed1.binance.org";
-    if(chainID === ChainIDs.BSCtestnet) return "https://bsc-testnet.public.blastapi.io";
+const uri = {
+    56: "https://bsc-dataseed1.binance.org",
+    97: "https://data-seed-prebsc-1-s3.binance.org:8545"
 }
-module.exports = getURI;
+module.exports = uri;
