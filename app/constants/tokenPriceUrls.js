@@ -22,6 +22,14 @@ const tokenPriceUrls = {
     dai: {
         apiId: "dai",
         url:   "https://api.coingecko.com/api/v3/simple/price?ids=dai&vs_currencies=usd",
+    },
+    eth: {
+        apiId: 'ethereum',
+        url: "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
+    },
+    btcb: {
+        apiId: 'bitcoin',
+        url: 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd'
     }
 };
 

@@ -37,7 +37,7 @@ exports.fetchLpPrices = async (lpName) => {
     const tokenName0 = str[0];
     const tokenName1 = str[1];
 
-    if (lpName =="usdc_busd_lp" || lpName == "usdc_usdt_lp" || lpName == "busd_usdt_lp") {
+    if (lpName =="usdc_busd_lp" || lpName == "usdc_usdt_lp" || lpName == "usdt_busd_lp") {
       const stableSwapAddress = addresses[lpName][DEFAULT_CHAINID];
       const stableSwap = new web3.eth.Contract(StableSwapABI, stableSwapAddress);
       const lpAddress = await stableSwap.methods.token().call();
