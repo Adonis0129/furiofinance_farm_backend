@@ -18,8 +18,8 @@ const getRewardFromMint = async () => {
         const averagePriceOracleAddress = addresses['averagePriceOracle'][DEFAULT_CHAINID];
         const averagePriceOracleContract = new web3.eth.Contract(AveragePriceOracleABI, averagePriceOracleAddress);
 
-        const bnbPrice = tokenPrices.getPrices("bnb");
-        const furFiPrice = tokenPrices.getPrices('furfi');
+        const bnbPrice =  tokenPrices.getPrices('bnb');
+        const furFiPrice =  tokenPrices.getPrices('furfi');
 
         const EfficiencyLevel = 500; //from strategy contracts
         const furFiBnbPrice = (await averagePriceOracleContract.methods.getAverageFurFiForOneEth().call()) / Math.pow(10, 18);
