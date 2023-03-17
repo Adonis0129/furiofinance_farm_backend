@@ -34,7 +34,7 @@ exports.calculateAndSave = async () => {
     var bnb_furfi_lp_Price = await tokenPrices.fetch_bnb_furfi_lp_Price();
 
  
-    var stakingPoolApr = await getStakingPoolApr();
+    var stakingPoolApr =1231// await getStakingPoolApr();
     var rewardFromMint = await getRewardFromMint();
     var rewardPerUSD = rewardFromMint.rewardPerUSD;
     var efficiencyLevel = rewardFromMint.efficiencyLevel;
@@ -47,7 +47,7 @@ exports.calculateAndSave = async () => {
 
       var lpName = (poolNames[i] + '_lp').toString();
       var lpPrice = await tokenPrices.fetchLpPrices(lpName);
-      var lpRewardsAPR = 0.3 // await getLpRewardAPR(lpName);
+      var lpRewardsAPR =  await getLpRewardAPR(lpName);
       var farmBaseRewardsAPR = await getFarmBaseRewardAPR(poolNames[i]) ?? {};
 
       // stablecoin strategy

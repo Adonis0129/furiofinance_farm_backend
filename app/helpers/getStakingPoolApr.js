@@ -19,8 +19,8 @@ const getStakingPoolApr = async () => {
         const stakingPoolAddress = addresses['stakingPool'][DEFAULT_CHAINID];
         const stakingPoolContract = new web3.eth.Contract( StakingPoolABI, stakingPoolAddress);
 
-        const furFiPrice = tokenPrices.getPrices('furfi');
-        const bnb_furfi_lp_Price = tokenPrices.getPrices('bnb_furfi_lp');
+        const furFiPrice =  tokenPrices.getPrices('furfi');
+        const bnb_furfi_lp_Price =  tokenPrices.getPrices('bnb_furfi_lp');
 
         const totalStaked = (await stakingPoolContract.methods.totalStaked().call()) / Math.pow(10, 18);
         const lastStakeRewardsFurFi = (await stakingPoolContract.methods.lastStakeRewardsFurFi().call()) / Math.pow(10, 18);

@@ -19,8 +19,8 @@ const getFarmBaseRewardAPR = async (poolName) => {
     try {
 
         const ffStrategyAddress = addresses[poolName]['furfiStrategy'][DEFAULT_CHAINID];
-        const scStrategyAddress = addresses[poolName]['standardStrategy'][DEFAULT_CHAINID];
-        const sdStrategyAddress = addresses[poolName]['stablecoinStrategy'][DEFAULT_CHAINID];
+        const scStrategyAddress = addresses[poolName]['stablecoinStrategy'][DEFAULT_CHAINID];
+        const sdStrategyAddress = addresses[poolName]['standardStrategy'][DEFAULT_CHAINID];
 
         const ffStrategyContract = new web3.eth.Contract( FFStrategyABI, ffStrategyAddress);
         const scStrategyContract = new web3.eth.Contract( SCStrategyABI, scStrategyAddress);
@@ -30,9 +30,10 @@ const getFarmBaseRewardAPR = async (poolName) => {
         const lpName = (poolName + '_lp').toString();
         const lpPrice = tokenPrices.getPrices(lpName);
 
-        const ffStrategyLastStakeRewardsCake = (await ffStrategyContract.methods.lastStakeRewardsCake().call()) / Math.pow(10, 18);
+        const ffStrategyLastStakeRewardsCake =(await ffStrategyContract.methods.lastStakeRewardsCake().call()) / Math.pow(10, 18);
         const ffStrategyDeposits = (await ffStrategyContract.methods.furiofiStrategyDeposits().call()) / Math.pow(10, 18);
         const ffLastStakeRewardsDuration = await ffStrategyContract.methods.lastStakeRewardsDuration().call();
+
         const scStrategyLastStakeRewardsCake = (await scStrategyContract.methods.lastStakeRewardsCake().call()) / Math.pow(10, 18);
         const scStrategyDeposits = (await scStrategyContract.methods.stablecoinStrategyDeposits().call()) / Math.pow(10, 18);
         const scLastStakeRewardsDuration = await scStrategyContract.methods.lastStakeRewardsDuration().call();
@@ -55,7 +56,6 @@ const getFarmBaseRewardAPR = async (poolName) => {
         }
                                                                             
         return farmBaseRewardAprs[poolName];
-
 
 
     } catch (err) {
