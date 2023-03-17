@@ -6,9 +6,9 @@ const getStakingPoolApr = require("../helpers/getStakingPoolApr");
 const getRewardFromMint = require("../helpers/getRewardFromMint");
 const tokenPrices = require("../helpers/getTokenPrices");
 
-const poolNames = ["dai_busd", "usdc_busd", "usdc_usdt", "busd_usdt"];
+const poolNames = ["dai_busd", "usdc_busd", "usdc_usdt", "usdt_busd", "eth_usdc", "btcb_busd", "busd_bnb"];
 
-let apys = {};
+let details = {};
 
 exports.calculateAndSave = async () => {
   try {
@@ -29,12 +29,14 @@ exports.calculateAndSave = async () => {
     var busdPrice = await tokenPrices.fetchTokenPrices('busd');
     var usdtPrice = await tokenPrices.fetchTokenPrices('usdt');
     var daiPrice = await tokenPrices.fetchTokenPrices('dai');
+    var ethPrice = await tokenPrices.fetchTokenPrices('eth');
+    var btcbPrice = await tokenPrices.fetchTokenPrices('btcb');
     var cakePrice =await tokenPrices.fetchTokenPrices('cake');
     var furFiPrice = await tokenPrices.fetchFurfiPrice();
     var bnb_furfi_lp_Price = await tokenPrices.fetch_bnb_furfi_lp_Price();
 
  
-    var stakingPoolApr =1231// await getStakingPoolApr();
+    var stakingPoolApr = await getStakingPoolApr();
     var rewardFromMint = await getRewardFromMint();
     var rewardPerUSD = rewardFromMint.rewardPerUSD;
     var efficiencyLevel = rewardFromMint.efficiencyLevel;
@@ -110,7 +112,7 @@ exports.calculateAndSave = async () => {
 
     }
 
-    apys = {
+    details = {
       date: strDate,
       bnbPrice: bnbPrice,
       furFiPrice: furFiPrice,
@@ -122,7 +124,7 @@ exports.calculateAndSave = async () => {
       instances: instances,
     };
 
-    // console.log(apys);
+    console.log(details);
 
   } catch (err) {
     // console.log(err);
@@ -130,7 +132,7 @@ exports.calculateAndSave = async () => {
   }
 };
 
-exports.getAPYS = (req, res) => {
-  res.status(200).send(apys);
+exports.getDetails = (req, res) => {
+  res.status(200).send(details);
   return;
 };

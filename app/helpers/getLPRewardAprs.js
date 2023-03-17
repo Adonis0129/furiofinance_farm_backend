@@ -1,9 +1,9 @@
 const Web3 = require("web3");
 const addresses = require("../constants/addresses");
+const DEFAULT_CHAINID = require("../constants/chainId");
 const uri = require("../constants/uri");
 const tokenPrices = require("./getTokenPrices");
 const fetchLP24Volume = require("./getLP24Volumes");
-const DEFAULT_CHAINID = require("../constants/chainId");
 const PairABI = require("../abis/contracts/pair.json").abi;
 const StableSwapABI = require("../abis/contracts/stableSwap.json").abi;
 
@@ -21,7 +21,7 @@ const getLpRewardAPR = async (lpName) => {
         const tokenName0 = str[0];
         const tokenName1 = str[1];
 
-        if (lpName =="usdc_busd_lp" || lpName == "usdc_usdt_lp" || lpName == "busd_usdt_lp") {
+        if (lpName =="usdc_busd_lp" || lpName == "usdc_usdt_lp" || lpName == "usdt_busd_lp") {
             const stableSwapAddress = addresses[lpName][DEFAULT_CHAINID];
             const stableSwap = new web3.eth.Contract(StableSwapABI, stableSwapAddress);
       

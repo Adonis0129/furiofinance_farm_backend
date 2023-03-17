@@ -3,7 +3,7 @@ const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const apyController = require("./app/controllers/apys");
+const detailController = require("./app/controllers/details");
 
 var corsOptions = {
   origin: "*"
@@ -28,11 +28,11 @@ app.get('/', (req, res) => {
   res.send('Hey this is my API running 🥳')
 })
 
-app.get('/api/computed-apys', apyController.getAPYS);
+app.get('/api/details', detailController.getDetails);
   
 
 setInterval(() => {
-  apyController.calculateAndSave();
+  detailController.calculateAndSave();
 }, 60000);
 
 
