@@ -33,7 +33,7 @@ app.get('/api/details', detailController.getDetails);
 
 setInterval(() => {
   detailController.calculateAndSave();
-}, 60000);
+}, 90000);
 
 
 const server = http.createServer(app);

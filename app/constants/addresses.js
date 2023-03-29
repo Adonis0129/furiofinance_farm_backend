@@ -7,6 +7,10 @@ const addresses = {
         56: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
         97: '0xae13d989dac2f0debff460ac112a837c89baa7cd'
     },
+    cake: {
+        56: '',
+        97: '0xCDf430577fA8b4Bc680324BFDD1d8CAEE7c33003'
+    },
     usdc: {
         56: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d',
         97: '0x9555f469d2Fc19Fa85D0B6184C3685950DC99291'
@@ -44,15 +48,15 @@ const addresses = {
         97: '0x8fdf0418827865c2a12957B22Ea667520E1f6295'
     },
     usdc_busd_lp: {
-        56: '0x2354ef4df11afacb85a5c7f98b624072eccddbb1', //?
+        56: '0xc2f5b9a3d9138ab2b74d581fc11346219ebf43fe', 
         97: '0xD0163bA9aC8382241345A3Ed33f42c35E0139Ea4' // pancakeStableswap address
     },
     usdc_usdt_lp: {
-        56: '0xec6557348085aa57c72514d67070dc863c0a5a8c', //?
+        56: '0x3efebc418efb585248a0d2140cfb87afcc2c63dd', 
         97: '0xFD6989510394a23a0aD98925AB0Ad5975Af66e10' // pancakeStableswap address
     },
     usdt_busd_lp: {
-        56: '0x7efaef62fddcca950418312c6c91aef321375a00', //?
+        56: '0x169f653a54acd441ab34b73da9946e2c451787ef', 
         97: '0xEF1fcdeB1C34BC099b1A8ee856F450cC2e31d291' // pancakeStableswap address
     },
     eth_usdc_lp: {
@@ -67,10 +71,36 @@ const addresses = {
         56: '0x58F876857a02D6762E0101bb5C46A8c1ED44Dc16',
         97: '0xB3cC546096fe2642756F1cf2258b62B59E7A34Da'
     },
-    bnb_furfi_lp: {
+    furfi_bnb_lp: {
         56: '',
         97: '0xd734C3D6B79Fc236092Ef87E1ED35786ce2b800C'
     },
+    /////////////////////////////////////////////////////////////////////////
+    cake_bnb_lp: {
+        56: '',
+        97: '0x41b6Ab436e5Ed6B5aDbfe1Bb220EB17bE5dEf73b'
+    },
+    usdc_bnb_lp: {
+        56: '',
+        97: '0x7B6e44e243FedF902D9F3CDe3dD3C8a90edc4B55'
+    },
+    usdt_bnb_lp: {
+        56: '',
+        97: '0x9b0A88eb9621d15a727a09a368fB65aD43EE5fd3'
+    },
+    dai_bnb_lp: {
+        56: '',
+        97: '0x02015C0ef18a3a43612b3c652a69E03004eb9e33'
+    },
+    eth_bnb_lp: {
+        56: '',
+        97: '0x5FD1cE04bC5C8119386277117D3d2C75620a0f51'
+    },
+    btcb_bnb_lp: {
+        56: '',
+        97: '0xBf2e6a08895209E4d7BF55841E0A06258f38993a'
+    },
+    ///////////////////////////////////////////////////////////////////////////////////
     stakingPool: {
         56: '',
         97: '0xF1be4C5B67d6A04B84564501727E59E32E761A6F'

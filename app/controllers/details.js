@@ -24,16 +24,16 @@ exports.calculateAndSave = async () => {
     var strDate = (year +"-" +month +"-" +date +" " +hours +":" +minutes +":" +seconds).toString();
 
     // fetch all token prices - use to lpPrices
-    var bnbPrice = await tokenPrices.fetchTokenPrices("bnb");
-    var usdcPrice = await tokenPrices.fetchTokenPrices('usdc');
-    var busdPrice = await tokenPrices.fetchTokenPrices('busd');
-    var usdtPrice = await tokenPrices.fetchTokenPrices('usdt');
-    var daiPrice = await tokenPrices.fetchTokenPrices('dai');
-    var ethPrice = await tokenPrices.fetchTokenPrices('eth');
-    var btcbPrice = await tokenPrices.fetchTokenPrices('btcb');
-    var cakePrice =await tokenPrices.fetchTokenPrices('cake');
-    var furFiPrice = await tokenPrices.fetchFurfiPrice();
-    var bnb_furfi_lp_Price = await tokenPrices.fetch_bnb_furfi_lp_Price();
+    var bnbPrice = await tokenPrices.fetchTokenPrices("bnb"); //from mainnet
+    var usdcPrice = await tokenPrices.fetchTokenPricesOnTestnet('usdc'); //from testnet
+    var busdPrice = await tokenPrices.fetchTokenPricesOnTestnet('busd'); //from testnet
+    var usdtPrice = await tokenPrices.fetchTokenPricesOnTestnet('usdt'); //from testnet
+    var daiPrice = await tokenPrices.fetchTokenPricesOnTestnet('dai'); //from testnet
+    var ethPrice = await tokenPrices.fetchTokenPricesOnTestnet('eth'); //from testnet
+    var btcbPrice = await tokenPrices.fetchTokenPricesOnTestnet('btcb'); //from testnet
+    var cakePrice = await tokenPrices.fetchTokenPricesOnTestnet('cake'); //from testnet
+    var furFiPrice = await tokenPrices.fetchTokenPricesOnTestnet('furfi');
+    var furfi_bnb_lp_Price = await tokenPrices.fetchLpPrices('furfi_bnb_lp');
 
  
     var stakingPoolApr = await getStakingPoolApr();
@@ -112,11 +112,13 @@ exports.calculateAndSave = async () => {
 
     }
 
+
     details = {
       date: strDate,
+      allPrices: tokenPrices.getAllTokenPrices(),
       bnbPrice: bnbPrice,
       furFiPrice: furFiPrice,
-      bnb_furfi_lp_Price: bnb_furfi_lp_Price,
+      bnb_furfi_lp_Price: furfi_bnb_lp_Price,
       efficiencyLevel: efficiencyLevel,
       furFiBnbPrice: furFiBnbPrice,
       tvl: tvl,
