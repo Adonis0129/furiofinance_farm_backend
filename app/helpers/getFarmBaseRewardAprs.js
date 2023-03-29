@@ -26,7 +26,7 @@ const getFarmBaseRewardAPR = async (poolName) => {
         const scStrategyContract = new web3.eth.Contract( SCStrategyABI, scStrategyAddress);
         const sdStrategyContract = new web3.eth.Contract( SDStrategyABI, sdStrategyAddress);
 
-        const cakePrice = 0.0013; //  tokenPrices.getPrices("cake");
+        const cakePrice = tokenPrices.getPrices("cake");
         const lpName = (poolName + '_lp').toString();
         const lpPrice = tokenPrices.getPrices(lpName);
 
