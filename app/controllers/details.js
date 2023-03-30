@@ -32,7 +32,7 @@ exports.calculateAndSave = async () => {
     var ethPrice = await tokenPrices.fetchTokenPricesOnTestnet('eth'); //from testnet
     var btcbPrice = await tokenPrices.fetchTokenPricesOnTestnet('btcb'); //from testnet
     var cakePrice = await tokenPrices.fetchTokenPricesOnTestnet('cake'); //from testnet
-    var furFiPrice = await tokenPrices.fetchTokenPricesOnTestnet('furfi');
+    var furFiPrice = await tokenPrices.fetchTokenPricesOnTestnet('furfi'); //from testnet
     var furfi_bnb_lp_Price = await tokenPrices.fetchLpPrices('furfi_bnb_lp');
 
  
